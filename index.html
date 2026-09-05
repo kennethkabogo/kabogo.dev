@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kabogo.dev</title>
+<meta name="description" content="Kenneth Kabogo — firmware and systems security engineer. Writing about bugs and building VAR.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg:        #F8FBFF;
+    --text:      #0D1B2A;
+    --muted:     #5B7A8E;
+    --accent:    #007EB0;
+    --rule:      #C0D8E8;
+    --bg-nav:    #004B87;
+    --nav-text:  #FFFFFF;
+    --nav-muted: rgba(255,255,255,0.55);
+    --greeting:  #004B87;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:        #001E38;
+      --text:      #E4F0F8;
+      --muted:     #7AACBF;
+      --accent:    #29BDE0;
+      --rule:      #0A3050;
+      --bg-nav:    #001428;
+      --nav-text:  #E4F0F8;
+      --nav-muted: rgba(228,240,248,0.45);
+      --greeting:  #E4F0F8;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg:        #001E38;
+    --text:      #E4F0F8;
+    --muted:     #7AACBF;
+    --accent:    #29BDE0;
+    --rule:      #0A3050;
+    --bg-nav:    #001428;
+    --nav-text:  #E4F0F8;
+    --nav-muted: rgba(228,240,248,0.45);
+    --greeting:  #E4F0F8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Literata', Georgia, 'Times New Roman', serif;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  .site-header {
+    padding: 1.1rem 2rem;
+    background: var(--bg-nav);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .site-header .wordmark {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--nav-text);
+    text-decoration: none;
+    opacity: 0.92;
+  }
+
+  .site-header .wordmark:hover { opacity: 1; }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .bio {
+    padding-top: 4.5rem;
+    padding-bottom: 3.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .bio .greeting {
+    font-size: clamp(1.55rem, 4vw, 2rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--greeting);
+    margin-bottom: 0.2rem;
+  }
+
+  .bio .tagline {
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .bio .about {
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 58ch;
+    margin-bottom: 1.1rem;
+  }
+
+  .bio .about:last-of-type { margin-bottom: 2rem; }
+
+  .bio a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+  }
+
+  .bio a:hover { text-decoration-thickness: 2px; }
+
+  .social {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+  }
+
+  .social a { color: var(--muted); text-decoration: none; }
+  .social a:hover { color: var(--accent); }
+  .social .sep { color: var(--rule); }
+
+  .writing { padding-top: 3rem; padding-bottom: 6rem; }
+
+  .section-label {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-list { list-style: none; }
+
+  .post-item {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 0.5rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+
+  .post-item:first-child { border-top: 1px solid var(--rule); }
+
+  .post-item time {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+  }
+
+  .post-item a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .post-item a:hover { color: var(--accent); }
+
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 1.25rem; }
+    .bio { padding-top: 3rem; }
+    .site-header { padding: 1rem 1.25rem; }
+    .post-item { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="wordmark" href="/">kabogo.dev</a>
+</header>
+
+<main>
+  <div class="container">
+
+    <section class="bio">
+      <p class="greeting">hi, I'm Kenneth.</p>
+      <p class="tagline">I find bugs and chase sunsets.</p>
+      <p class="about">
+        Firmware and systems security engineer. Most of my time is in EL3,
+        the highest privilege level on Arm processors, finding the bugs that
+        only show up after you've been staring at the architecture long enough.
+      </p>
+      <p class="about">
+        I also build things. Right now that's <a href="https://varprotocol.com">VAR</a>,
+        a runtime for AI agents that makes what they do verifiable at the hardware layer.
+      </p>
+      <nav class="social" aria-label="Social links">
+        <a href="https://twitter.com/kennethkabogo">twitter</a>
+        <span class="sep">·</span>
+        <a href="mailto:kenneth@varprotocol.com">email</a>
+      </nav>
+    </section>
+
+    <section class="writing" aria-labelledby="writing-label">
+      <h2 class="section-label" id="writing-label">writing</h2>
+      <ul class="post-list">
+        <li class="post-item">
+          <time datetime="2026-08-26">2026-08-26</time>
+          <a href="/the-confused-deputy/">The confused deputy, from EL3 to AI agents</a>
+        </li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+</body>
+</html>
