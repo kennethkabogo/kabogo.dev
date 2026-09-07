@@ -5,7 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>kabogo.dev</title>
 <meta name="description" content="Kenneth Kabogo — firmware and systems security engineer. Writing about bugs and building VAR.">
+<link rel="canonical" href="https://kabogo.dev/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kabogo.dev/">
+<meta property="og:title" content="Kenneth Kabogo — kabogo.dev">
+<meta property="og:description" content="Firmware and systems security engineer. EL3, Arm TrustZone, CVE research. Building VAR — a runtime that makes AI agents verifiable at the hardware layer.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@kennethkabogo_">
+<meta name="twitter:title" content="Kenneth Kabogo — kabogo.dev">
+<meta name="twitter:description" content="Firmware and systems security engineer. EL3, Arm TrustZone, CVE research. Building VAR.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Kenneth Kabogo",
+  "url": "https://kabogo.dev",
+  "email": "kenneth@varprotocol.com",
+  "jobTitle": "Firmware and Systems Security Engineer",
+  "description": "Firmware and systems security engineer specializing in EL3, Arm TrustZone, and SMC handler security. Five CVEs across MediaTek, AMD, and Altera. Five patches merged to Arm Trusted Firmware-A. Building VAR, a runtime attestation layer for AI agents.",
+  "sameAs": [
+    "https://twitter.com/kennethkabogo_",
+    "https://github.com/kennethkabogo",
+    "https://varprotocol.com"
+  ]
+}
+</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Lora:ital,wght@0,400..700;1,400..700&display=swap">
 <style>
   :root {
@@ -197,6 +222,36 @@
     .post-item { grid-template-columns: 1fr; gap: 0.2rem; }
   }
 
+  .research {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .research-tally {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .research-link {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+    white-space: nowrap;
+  }
+
+  .research-link:hover { color: var(--text); }
+
   .bio .tagline { cursor: pointer; user-select: none; }
 
   .clock {
@@ -246,6 +301,14 @@
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
         </a>
       </nav>
+    </section>
+
+    <section class="research" aria-label="Security research summary">
+      <div>
+        <p class="section-label" style="margin-bottom:0.6rem">Research</p>
+        <p class="research-tally">5 CVEs &middot; 5 patches in Arm TF-A</p>
+      </div>
+      <a class="research-link" href="/security/">Full record &#8594;</a>
     </section>
 
     <section class="writing" aria-labelledby="writing-label">

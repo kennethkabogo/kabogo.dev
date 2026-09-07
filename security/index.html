@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security Research — kabogo.dev</title>
+<meta name="description" content="CVE research and upstream firmware contributions by Kenneth Kabogo: CVE-2026-20467, CVE-2026-20468, CVE-2026-20469 (MediaTek apusys), CVE-2026-43551 (AMD XRT), CVE-2026-15175 (Altera). Five patches merged to Arm Trusted Firmware-A v2.15.">
+<link rel="canonical" href="https://kabogo.dev/security/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kabogo.dev/security/">
+<meta property="og:title" content="Security Research — Kenneth Kabogo">
+<meta property="og:description" content="Five CVEs across MediaTek, AMD, and Altera. Five patches merged to Arm Trusted Firmware-A. Consolidated record of vulnerability research and upstream firmware contributions.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@kennethkabogo_">
+<meta name="twitter:title" content="Security Research — Kenneth Kabogo">
+<meta name="twitter:description" content="Five CVEs across MediaTek, AMD, and Altera. Five patches merged to Arm Trusted Firmware-A v2.15.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Lora:ital,wght@0,400..700;1,400..700&display=swap">
+<style>
+  :root {
+    --bg:     #FAFAF8;
+    --text:   #1A1714;
+    --muted:  #8A8278;
+    --body:   #302C28;
+    --accent: #1A1714;
+    --rule:   #E4E0DA;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:     #181614;
+      --text:   #EAE6E0;
+      --muted:  #7A7268;
+      --body:   #C4BEB6;
+      --accent: #EAE6E0;
+      --rule:   #2A2622;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg:     #181614;
+    --text:   #EAE6E0;
+    --muted:  #7A7268;
+    --body:   #C4BEB6;
+    --accent: #EAE6E0;
+    --rule:   #2A2622;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, 'Times New Roman', serif;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--text);
+    width: 0%;
+    z-index: 100;
+    transition: width 0.08s linear;
+  }
+
+  .site-header {
+    padding: 1.4rem 2rem;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .site-header .back {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .site-header .back:hover { color: var(--accent); }
+
+  .clock {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  .page-date {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .page-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.2;
+    text-wrap: balance;
+    color: var(--text);
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .page-intro {
+    font-size: 1rem;
+    line-height: 1.86;
+    color: var(--body);
+    margin-bottom: 2.5rem;
+  }
+
+  .page-intro a {
+    color: var(--body);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--muted);
+  }
+
+  .page-intro a:hover { text-decoration-color: var(--text); }
+
+  .section-label {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3rem;
+    margin-bottom: 0;
+  }
+
+  .cve-list {
+    margin-top: 0;
+    border-top: 1px solid var(--rule);
+    margin-top: 1.5rem;
+  }
+
+  .cve-entry {
+    padding: 1.8rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .cve-id {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
+  }
+
+  .cve-meta {
+    font-size: 0.72rem;
+    font-family: 'Lora', Georgia, serif;
+    color: var(--muted);
+    margin-bottom: 0.85rem;
+    letter-spacing: 0.01em;
+  }
+
+  .cve-body {
+    font-size: 0.95rem;
+    line-height: 1.82;
+    color: var(--body);
+    margin-bottom: 0.9rem;
+    max-width: 58ch;
+  }
+
+  .cve-body a {
+    color: var(--body);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--muted);
+  }
+
+  .cve-body a:hover { text-decoration-color: var(--text); }
+
+  .cve-embargo {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--muted);
+    border-left: 2px solid var(--rule);
+    padding-left: 0.9rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .cve-links {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .cve-links a {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+  }
+
+  .cve-links a:hover { color: var(--text); }
+
+  .tfa-body {
+    margin-top: 1.5rem;
+  }
+
+  .tfa-body p {
+    font-size: 0.95rem;
+    line-height: 1.82;
+    color: var(--body);
+    margin-bottom: 1rem;
+    max-width: 58ch;
+  }
+
+  .tfa-body a {
+    color: var(--body);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--muted);
+  }
+
+  .tfa-body a:hover { text-decoration-color: var(--text); }
+
+  .tfa-links {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+  }
+
+  .tfa-links a {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+  }
+
+  .tfa-links a:hover { color: var(--text); }
+
+  .other-body {
+    margin-top: 1.5rem;
+  }
+
+  .other-body p {
+    font-size: 0.95rem;
+    line-height: 1.82;
+    color: var(--muted);
+    font-style: italic;
+    max-width: 58ch;
+  }
+
+  .page-kicker {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 2.5rem 1.25rem 4rem; }
+    .site-header { padding: 1.1rem 1.25rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<header class="site-header">
+  <a class="back" href="/">&#8592; kabogo.dev</a>
+  <span id="clock" class="clock"></span>
+</header>
+
+<main class="page">
+  <div class="page-date">Updated 2026-09-07</div>
+  <h1 class="page-title">Security Research</h1>
+
+  <p class="page-intro">A consolidated record of my public vulnerability research and upstream firmware contributions. For coordinated disclosure enquiries: <a href="mailto:kenneth@varprotocol.com">kenneth@varprotocol.com</a>.</p>
+
+  <p class="section-label">CVE Research</p>
+
+  <div class="cve-list">
+
+    <div class="cve-entry">
+      <h2 class="cve-id">CVE-2026-20467</h2>
+      <p class="cve-meta">MediaTek &middot; apusys NPU driver &middot; Severity: High, per MediaTek's bulletin</p>
+      <p class="cve-body">Exposed dangerous function in MediaTek's apusys (AI Processing Unit Subsystem) driver. A local attacker with no additional execution privileges can invoke a privileged kernel function directly, resulting in local privilege escalation without user interaction.</p>
+      <div class="cve-links">
+        <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-20467" rel="noopener noreferrer">NVD</a>
+        <a href="https://corp.mediatek.com/product-security-bulletin" rel="noopener noreferrer">MediaTek PSB</a>
+      </div>
+    </div>
+
+    <div class="cve-entry">
+      <h2 class="cve-id">CVE-2026-20468</h2>
+      <p class="cve-meta">MediaTek &middot; apusys NPU driver &middot; Severity: High, per MediaTek's bulletin</p>
+      <p class="cve-body">Confused deputy vulnerability in MediaTek's apusys driver leading to an out-of-bounds write. The driver accepts a caller-supplied pointer and length and, operating at elevated privilege, forwards them to a privileged operation without confirming the destination range lies within the caller's own memory. The attacker never acquires privilege directly — the driver spends its authority on their behalf. This is the same structural pattern I describe in <a href="/the-confused-deputy/">The confused deputy, from EL3 to AI agents</a>, now encountered above the firmware layer in a vendor NPU driver.</p>
+      <div class="cve-links">
+        <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-20468" rel="noopener noreferrer">NVD</a>
+        <a href="https://corp.mediatek.com/product-security-bulletin" rel="noopener noreferrer">MediaTek PSB</a>
+      </div>
+    </div>
+
+    <div class="cve-entry">
+      <h2 class="cve-id">CVE-2026-20469</h2>
+      <p class="cve-meta">MediaTek &middot; trusted_mem driver &middot; Severity: High, per MediaTek's bulletin</p>
+      <p class="cve-body">Write-what-where primitive in MediaTek's trusted memory driver. The driver accepts an attacker-controlled destination address and writes attacker-controlled data to it without enforcing that the destination falls within the permitted memory range, allowing a local attacker to corrupt arbitrary kernel memory.</p>
+      <div class="cve-links">
+        <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-20469" rel="noopener noreferrer">NVD</a>
+        <a href="https://corp.mediatek.com/product-security-bulletin" rel="noopener noreferrer">MediaTek PSB</a>
+      </div>
+    </div>
+
+    <div class="cve-entry">
+      <h2 class="cve-id">CVE-2026-43551</h2>
+      <p class="cve-meta">AMD &middot; XRT xocl driver (Linux) &middot; Coordinated disclosure in progress</p>
+      <p class="cve-body">Double-fetch race condition in AMD's XRT xocl driver. A user-space value is read once for validation and again for use; the mapping can change between reads, allowing the value that passes validation to differ from the value that is acted upon. CVE assigned.</p>
+      <p class="cve-embargo">Details under embargo. Advisory publication at AMD's discretion.</p>
+    </div>
+
+    <div class="cve-entry">
+      <h2 class="cve-id">CVE-2026-15175</h2>
+      <p class="cve-meta">Altera &middot; linux-socfpga SDM mailbox driver &middot; Coordinated disclosure in progress</p>
+      <p class="cve-body">Unguarded IOCTL in Altera's linux-socfpga Secure Device Manager mailbox driver. An unprivileged local caller can trigger arbitrary QSPI flash erase operations, including the destruction of key material stored in flash. CVE assigned.</p>
+      <p class="cve-embargo">Details under embargo. Advisory publication at Altera's discretion.</p>
+    </div>
+
+  </div>
+
+  <p class="section-label">Arm Trusted Firmware-A</p>
+
+  <div class="tfa-body">
+    <p>Five patches merged to <a href="https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/" rel="noopener noreferrer">Arm Trusted Firmware-A</a>, the reference implementation of secure-world firmware for Arm processors. The core contribution is a validation framework for SMC (Secure Monitor Call) handlers, included in v2.15.</p>
+    <p>The framework addresses privilege-blind forwarding in EL3: prior to it, individual SMC handlers validated base address and size separately, permitting integer overflow on the sum and time-of-check-to-time-of-use races between validation and use. The framework copies caller-supplied arguments exactly once, validates base and size together as a pair with overflow checking, and delegates range authority to a per-platform hook with access to the full memory map. The pattern is documented in the runtime service writer's guide for authors implementing new SMC handlers.</p>
+    <div class="tfa-links">
+      <a href="https://review.trustedfirmware.org/q/owner:kennethkabogo2@gmail.com" rel="noopener noreferrer">Gerrit contributions</a>
+      <a href="https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/" rel="noopener noreferrer">TF-A repository</a>
+    </div>
+  </div>
+
+  <p class="section-label">Other Research</p>
+
+  <div class="other-body">
+    <p>Additional validated findings are in coordinated disclosure. Details available on request.</p>
+  </div>
+
+  <div class="page-kicker">Kenneth Kabogo &middot; kabogo.dev</div>
+</main>
+
+<script>
+const bar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) * 100;
+  bar.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+
+const clockEl = document.getElementById('clock');
+function tick() {
+  clockEl.textContent = new Date().toLocaleTimeString('en-GB', {
+    timeZone: 'Africa/Nairobi',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  }) + ' · Nairobi';
+}
+tick(); setInterval(tick, 1000);
+</script>
+
+</body>
+</html>
