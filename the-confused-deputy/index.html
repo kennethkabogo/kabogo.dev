@@ -145,6 +145,24 @@
     .site-header { padding: 1.1rem 1.25rem; }
   }
 
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--text);
+    width: 0%;
+    z-index: 100;
+    transition: width 0.08s linear;
+  }
+
+  .clock {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
   }
@@ -152,8 +170,11 @@
 </head>
 <body>
 
-<header class="site-header">
+<div class="progress" id="progress"></div>
+
+<header class="site-header" style="justify-content: space-between;">
   <a class="back" href="/">&#8592; kabogo.dev</a>
+  <span id="clock" class="clock"></span>
 </header>
 
 <article class="post">
@@ -239,6 +260,27 @@
 
   <div class="post-kicker">Kenneth Kabogo &middot; kabogo.dev</div>
 </article>
+
+
+<script>
+// Reading progress bar
+const bar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) * 100;
+  bar.style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+
+// Live clock
+const clockEl = document.getElementById('clock');
+function tick() {
+  clockEl.textContent = new Date().toLocaleTimeString('en-GB', {
+    timeZone: 'Africa/Nairobi',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  }) + ' · Nairobi';
+}
+tick(); setInterval(tick, 1000);
+</script>
 
 </body>
 </html>
