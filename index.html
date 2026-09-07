@@ -5,44 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>kabogo.dev</title>
 <meta name="description" content="Kenneth Kabogo — firmware and systems security engineer. Writing about bugs and building VAR.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Lora:ital,wght@0,400..700;1,400..700&display=swap">
 <style>
   :root {
-    --bg:        #F8FBFF;
-    --text:      #0D1B2A;
-    --muted:     #5B7A8E;
-    --accent:    #007EB0;
-    --rule:      #C0D8E8;
-    --bg-nav:    #004B87;
-    --nav-text:  #FFFFFF;
-    --nav-muted: rgba(255,255,255,0.55);
-    --greeting:  #004B87;
+    --bg:     #F5F0E8;
+    --text:   #221E16;
+    --muted:  #9A8A74;
+    --body:   #3D3528;
+    --accent: #A67C52;
+    --rule:   #DFD6C6;
+    --icons:  #C2B49E;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg:        #001E38;
-      --text:      #E4F0F8;
-      --muted:     #7AACBF;
-      --accent:    #29BDE0;
-      --rule:      #0A3050;
-      --bg-nav:    #001428;
-      --nav-text:  #E4F0F8;
-      --nav-muted: rgba(228,240,248,0.45);
-      --greeting:  #E4F0F8;
+      --bg:     #1C1812;
+      --text:   #E8E0D0;
+      --muted:  #7A6A58;
+      --body:   #B8A890;
+      --accent: #C4965E;
+      --rule:   #2E2820;
+      --icons:  #5A4A3A;
     }
   }
 
   :root[data-theme="dark"] {
-    --bg:        #001E38;
-    --text:      #E4F0F8;
-    --muted:     #7AACBF;
-    --accent:    #29BDE0;
-    --rule:      #0A3050;
-    --bg-nav:    #001428;
-    --nav-text:  #E4F0F8;
-    --nav-muted: rgba(228,240,248,0.45);
-    --greeting:  #E4F0F8;
+    --bg:     #1C1812;
+    --text:   #E8E0D0;
+    --muted:  #7A6A58;
+    --body:   #B8A890;
+    --accent: #C4965E;
+    --rule:   #2E2820;
+    --icons:  #5A4A3A;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,30 +45,29 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Literata', Georgia, 'Times New Roman', serif;
+    font-family: 'Lora', Georgia, 'Times New Roman', serif;
     line-height: 1.75;
     min-height: 100vh;
   }
 
   .site-header {
-    padding: 1.1rem 2rem;
-    background: var(--bg-nav);
+    padding: 1.4rem 2rem;
+    border-bottom: 1px solid var(--rule);
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
   .site-header .wordmark {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    color: var(--nav-text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--text);
     text-decoration: none;
-    opacity: 0.92;
+    letter-spacing: -0.01em;
   }
 
-  .site-header .wordmark:hover { opacity: 1; }
+  .site-header .wordmark:hover { color: var(--accent); }
 
   .container {
     max-width: 680px;
@@ -89,27 +82,27 @@
   }
 
   .bio .greeting {
-    font-size: clamp(1.55rem, 4vw, 2rem);
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(1.9rem, 5vw, 2.7rem);
     font-style: italic;
     font-weight: 400;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    color: var(--greeting);
-    margin-bottom: 0.2rem;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 0.3rem;
   }
 
   .bio .tagline {
-    font-size: 1rem;
+    font-size: 0.88rem;
     font-style: italic;
-    font-weight: 300;
     color: var(--muted);
-    margin-bottom: 2rem;
+    margin-bottom: 2.2rem;
   }
 
   .bio .about {
     font-size: 1rem;
-    line-height: 1.8;
-    max-width: 58ch;
+    line-height: 1.86;
+    color: var(--body);
+    max-width: 56ch;
     margin-bottom: 1.1rem;
   }
 
@@ -127,11 +120,11 @@
   .social {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
 
   .social a {
-    color: var(--muted);
+    color: var(--icons);
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -149,12 +142,12 @@
   .writing { padding-top: 3rem; padding-bottom: 6rem; }
 
   .section-label {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--accent);
     margin-bottom: 1.5rem;
   }
 
@@ -164,7 +157,7 @@
     display: grid;
     grid-template-columns: 7.5rem 1fr;
     gap: 0.5rem;
-    padding: 0.9rem 0;
+    padding: 1.1rem 0;
     border-bottom: 1px solid var(--rule);
     align-items: baseline;
   }
@@ -172,18 +165,19 @@
   .post-item:first-child { border-top: 1px solid var(--rule); }
 
   .post-item time {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 0.72rem;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.68rem;
     color: var(--muted);
-    letter-spacing: 0.02em;
     line-height: 1.6;
   }
 
   .post-item a {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-style: italic;
+    font-size: 1.1rem;
     color: var(--text);
     text-decoration: none;
-    font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.4;
   }
 
   .post-item a:hover { color: var(--accent); }
@@ -197,7 +191,7 @@
   @media (max-width: 600px) {
     .container { padding: 0 1.25rem; }
     .bio { padding-top: 3rem; }
-    .site-header { padding: 1rem 1.25rem; }
+    .site-header { padding: 1.1rem 1.25rem; }
     .post-item { grid-template-columns: 1fr; gap: 0.2rem; }
   }
 
@@ -241,7 +235,7 @@
     </section>
 
     <section class="writing" aria-labelledby="writing-label">
-      <h2 class="section-label" id="writing-label">writing</h2>
+      <h2 class="section-label" id="writing-label">Writing</h2>
       <ul class="post-list">
         <li class="post-item">
           <time datetime="2026-08-26">2026-08-26</time>

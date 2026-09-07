@@ -5,41 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The confused deputy, from EL3 to AI agents — kabogo.dev</title>
 <meta name="description" content="The confused deputy is a 1988 bug. I spent a year fixing it in firmware, then found the AI industry reaching for the same broken tool.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Lora:ital,wght@0,400..700;1,400..700&display=swap">
 <style>
   :root {
-    --bg:        #F8FBFF;
-    --text:      #0D1B2A;
-    --muted:     #5B7A8E;
-    --accent:    #007EB0;
-    --rule:      #C0D8E8;
-    --bg-nav:    #004B87;
-    --nav-text:  #FFFFFF;
-    --nav-muted: rgba(255,255,255,0.55);
+    --bg:     #F5F0E8;
+    --text:   #221E16;
+    --muted:  #9A8A74;
+    --body:   #3D3528;
+    --accent: #A67C52;
+    --rule:   #DFD6C6;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg:        #001E38;
-      --text:      #E4F0F8;
-      --muted:     #7AACBF;
-      --accent:    #29BDE0;
-      --rule:      #0A3050;
-      --bg-nav:    #001428;
-      --nav-text:  #E4F0F8;
-      --nav-muted: rgba(228,240,248,0.45);
+      --bg:     #1C1812;
+      --text:   #E8E0D0;
+      --muted:  #7A6A58;
+      --body:   #B8A890;
+      --accent: #C4965E;
+      --rule:   #2E2820;
     }
   }
 
   :root[data-theme="dark"] {
-    --bg:        #001E38;
-    --text:      #E4F0F8;
-    --muted:     #7AACBF;
-    --accent:    #29BDE0;
-    --rule:      #0A3050;
-    --bg-nav:    #001428;
-    --nav-text:  #E4F0F8;
-    --nav-muted: rgba(228,240,248,0.45);
+    --bg:     #1C1812;
+    --text:   #E8E0D0;
+    --muted:  #7A6A58;
+    --body:   #B8A890;
+    --accent: #C4965E;
+    --rule:   #2E2820;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,30 +42,30 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Literata', Georgia, 'Times New Roman', serif;
+    font-family: 'Lora', Georgia, 'Times New Roman', serif;
     line-height: 1.75;
     min-height: 100vh;
   }
 
   .site-header {
-    padding: 1.1rem 2rem;
-    background: var(--bg-nav);
+    padding: 1.4rem 2rem;
+    border-bottom: 1px solid var(--rule);
     display: flex;
     align-items: center;
   }
 
   .site-header .back {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.04em;
-    color: var(--nav-muted);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--muted);
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 0.4rem;
   }
 
-  .site-header .back:hover { color: var(--nav-text); }
+  .site-header .back:hover { color: var(--accent); }
 
   .post {
     max-width: 680px;
@@ -80,36 +74,41 @@
   }
 
   .post-date {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 0.75rem;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
     color: var(--muted);
-    letter-spacing: 0.02em;
     margin-bottom: 1.5rem;
   }
 
   .post-title {
-    font-size: clamp(1.55rem, 4vw, 2.1rem);
-    font-weight: 700;
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+    font-weight: 400;
+    font-style: italic;
     line-height: 1.2;
-    letter-spacing: -0.01em;
     text-wrap: balance;
+    color: var(--text);
     margin-bottom: 2.5rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--rule);
   }
 
-  .post-body { font-size: 1rem; font-optical-sizing: auto; }
-  .post-body p { margin-bottom: 1.35rem; }
+  .post-body {
+    font-size: 1rem;
+    color: var(--body);
+  }
+
+  .post-body p { margin-bottom: 1.35rem; line-height: 1.86; }
 
   .post-body h2 {
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    margin-top: 2.5rem;
-    margin-bottom: 0.75rem;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    margin-top: 2.8rem;
+    margin-bottom: 1rem;
   }
 
   .post-body a {
@@ -127,10 +126,10 @@
     margin-top: 3rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--rule);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.72rem;
+    font-style: italic;
     color: var(--muted);
-    letter-spacing: 0.02em;
   }
 
   a:focus-visible {
@@ -141,7 +140,7 @@
 
   @media (max-width: 600px) {
     .post { padding: 2.5rem 1.25rem 4rem; }
-    .site-header { padding: 1rem 1.25rem; }
+    .site-header { padding: 1.1rem 1.25rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
