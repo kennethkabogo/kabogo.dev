@@ -208,77 +208,7 @@
     white-space: nowrap;
   }
 
-  .terminal {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    width: min(440px, calc(100vw - 3rem));
-    background: #181614;
-    border: 1px solid #2A2622;
-    border-radius: 8px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.78rem;
-    color: #EAE6E0;
-    z-index: 100;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.55);
-  }
-
-  .term-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid #2A2622;
-    color: #4A4640;
-    font-size: 0.7rem;
-  }
-
-  .term-header button {
-    background: none;
-    border: none;
-    color: #4A4640;
-    cursor: pointer;
-    font-size: 1.1rem;
-    line-height: 1;
-    padding: 0;
-    transition: color 0.12s;
-  }
-
-  .term-header button:hover { color: #EAE6E0; }
-
-  .term-body {
-    padding: 0.75rem 1rem;
-    min-height: 72px;
-    max-height: 220px;
-    overflow-y: auto;
-    line-height: 1.65;
-  }
-
-  .term-body .lcmd { color: #4A4640; }
-  .term-body .lout { color: #C4BEB6; }
-
-  .term-footer {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 1rem;
-    border-top: 1px solid #2A2622;
-  }
-
-  .term-footer .prompt { color: #4A4640; }
-
-  .term-footer input {
-    background: none;
-    border: none;
-    color: #EAE6E0;
-    font-family: inherit;
-    font-size: inherit;
-    flex: 1;
-    outline: none;
-    caret-color: #EAE6E0;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
   }
 </style>
@@ -332,18 +262,6 @@
 </main>
 
 
-<div class="terminal" id="term" hidden>
-  <div class="term-header">
-    <span>kenneth@kabogo.dev — zsh</span>
-    <button id="term-close" aria-label="Close">×</button>
-  </div>
-  <div class="term-body" id="term-body"></div>
-  <div class="term-footer">
-    <span class="prompt">$</span>
-    <input id="term-input" autocomplete="off" spellcheck="false" aria-label="command">
-  </div>
-</div>
-
 <script>
 // Live clock — Nairobi time, universal reference
 const clockEl = document.getElementById('clock');
@@ -373,56 +291,6 @@ taglineEl.textContent = taglines[0];
 taglineEl.addEventListener('click', () => {
   tIdx = (tIdx + 1) % taglines.length;
   taglineEl.textContent = taglines[tIdx];
-});
-
-// Terminal
-const term = document.getElementById('term');
-const termBody = document.getElementById('term-body');
-const termInput = document.getElementById('term-input');
-document.getElementById('term-close').addEventListener('click', () => { term.hidden = true; });
-
-const CMDS = {
-  help:     () => 'commands:  whoami  uptime  ls  uname  pwd  clear  exit',
-  whoami:   () => 'kenneth kabogo. firmware engineer. building VAR.',
-  uptime:   () => `up ${Math.floor(performance.now()/1000)}s this session. kernel panics: 0. SMC calls handled: ∞`,
-  ls:       () => 'bugs/   sunsets/   var/   apex-spec-v2.7.1.pdf   confused-deputy.md',
-  uname:    () => 'AArch64 TrustZone-A 2.7.1-APEX #1 SMP EL3 — kabogo.dev 2026',
-  'uname -a': () => 'AArch64 TrustZone-A 2.7.1-APEX #1 SMP EL3 — kabogo.dev 2026',
-  pwd:      () => '/home/kenneth',
-  clear:    () => { termBody.innerHTML = ''; return null; },
-  exit:     () => { term.hidden = true; return null; },
-};
-
-function termPrint(cmd, out) {
-  const c = document.createElement('div');
-  c.className = 'lcmd';
-  c.textContent = '$ ' + cmd;
-  termBody.appendChild(c);
-  if (out !== null && out !== undefined) {
-    const o = document.createElement('div');
-    o.className = 'lout';
-    o.textContent = out;
-    termBody.appendChild(o);
-  }
-  termBody.scrollTop = termBody.scrollHeight;
-}
-
-termInput.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const raw = termInput.value.trim();
-  termInput.value = '';
-  if (!raw) return;
-  const fn = CMDS[raw];
-  termPrint(raw, fn ? fn() : `command not found: ${raw}. try 'help'.`);
-});
-
-document.addEventListener('keydown', e => {
-  if ((e.key === '/' || e.key === '`') && document.activeElement.tagName !== 'INPUT') {
-    e.preventDefault();
-    term.hidden = false;
-    termInput.focus();
-  }
-  if (e.key === 'Escape' && !term.hidden) { term.hidden = true; }
 });
 </script>
 
